@@ -5,11 +5,11 @@ package "IoT System" {
     [MPPT/BMS Board] --> [Zolertia Server] : "Wired Communication (UART)"
 }
 
-    [Zolertia Server] --> [Zolertia Client] : "Wireless Communication (CoAP)"
+    [Zolertia Server] --> [Border router] : "Wireless Communication (CoAP)"
 
 package "PC" {
     [HTTP Server, CoAP Client] --> [Database] : "Storage"
-    [tunslip6] --> [Zolertia Client] : "USB"
+    [tunslip6] --> [Border router] : "USB"
     [Database] --> [User Interface] : "Visualization of data"
 }
 

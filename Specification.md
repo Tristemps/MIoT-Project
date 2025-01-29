@@ -16,7 +16,7 @@ This project aims to design an IoT system capable of collecting, transmitting, a
    - Implement **CoAP** (for lightweight communication between Zolertia boards), **6LoWPAN** (for IPv6 adaptation to low-power networks), and **IPv6** (for global connectivity).
 
 3. **Data Visualization and Processing**:
-   - Transmit data collected by the Zolertia Client to a computer for storage and visualization via a user interface.
+   - Transmit data collected by the Zolertia Border Router to a computer for storage and visualization via a user interface.
 
 ---
 
@@ -36,9 +36,11 @@ This project aims to design an IoT system capable of collecting, transmitting, a
 - **IPv6**: Provides global connectivity for Zolertia boards.
 
 ### **3. Computer**
-- Receives and stores data sent by Zolertia Client.
+- Receives and stores data sent by Zolertia Border Router.
 - Provides a user interface to visualize the collected data.
 
+### **4. Architecture**
+![image](unnamed.png)
 ---
 
 ## **Specifications of the Boards**
@@ -52,7 +54,6 @@ This project aims to design an IoT system capable of collecting, transmitting, a
 - **Input**: Voltage from the solar panel.
 - **Output**: Regulated voltage to the **BMS**.
 
----
 
 ### **2. BMS Board**
 - **Role**:
@@ -64,22 +65,20 @@ This project aims to design an IoT system capable of collecting, transmitting, a
 - **Input**: Regulated voltage from the MPPT.
 - **Output**: Power for the Zolertia Server.
 
----
 
 ### **3. Zolertia Server Board**
 - **Role**:
-  - The Zolertia Server, powered by the battery management system (BMS), is responsible for collecting voltage and current data from the battery but alos the time. The Zolertia Server communicates the data to the Zolertia Client via the **CoAP** protocol over the **6LoWPAN** wireless network.
+  - The Zolertia Server, powered by the battery management system (BMS), is responsible for collecting voltage and current data from the battery but alos the time. The Zolertia Server communicates the data to the Zolertia Border Router via the **CoAP** protocol over the **6LoWPAN** wireless network.
 - **Main Features**:
    - Collects voltage, current and time data from the battery.
    - Provides a wireless interface for communication, compatible with **6LoWPAN**.
    - Ensures lightweight and efficient data exchange using the **CoAP** protocol.
-   - Formats in **json** the collected data for seamless transmission to the Zolertia Client.
+   - Formats in **json** the collected data for seamless transmission to the Zolertia Border Router.
 
----
 
-### **4. Zolertia Client Board**
+### **4. Border Router Board**
 - **Role**:
-  - The Zolertia Client, powered via USB from a computer, retrieves voltage, current and time data collected by the Zolertia Server. It communicates with the Zolertia Server using the **CoAP** protocol over the **6LoWPAN** wireless interface to request and gather this information.
+  - The Border router, powered via USB from a computer, retrieves voltage, current and time data collected by the Zolertia Server. It communicates with the Zolertia Server using the **CoAP** protocol over the **6LoWPAN** wireless interface to request and gather this information.
 - **Main Features**:
    - Communicates wirelessly with the Zolertia Server.
    - Efficiently retrieves voltage, current and time data using the lightweight **CoAP** protocol.
@@ -104,8 +103,58 @@ This project aims to design an IoT system capable of collecting, transmitting, a
 ---
 
 ## **Transmitted Information**
-   - The Zolertia Client will perform a **GET** request to the Zolertia Server to retrieve data such as voltage, current, and time in a **json** format.
-   - The Zolertia Client will then send this information to the **HTTP server**, which will generate a graph displaying the solar panel's power as a function of time.
+   - The Zolertia Border Router will perform a **GET** request to the Zolertia Server to retrieve data such as voltage, current, and time in a **text** format.
+   - The Border Router will then send this information to the **HTTP server**, which will generate a graph displaying the solar panel's power as a function of time.
+
+UART
+```json
+text format example: 
+voltage : 3.65
+intensity : 1.0
+```
+
+CoAP
+```json
+text format example: 
+voltage : 3.65
+intensity : 1.0
+```
+
+PC
+```json
+text format example: 
+voltage : 3.65
+intensity : 1.0
+ts : 2024/12/16*14:05:40
+```
+
+---
+
+## PC System Overview
+- **Role**:
+The PC serves as a central hub for data processing, storage, and visualization. It connects to the **Zolertia Border Router** via USB to collect voltage and current data measured by the Zolertia Server.
+
+
+### 1. Data Storage
+- The collected data, including **voltage**, **current** and **timestamps**, is stored in a **database**.
+
+- **Database Choice (MySQL)**: 
+
+| Field      | Type                | Description          |
+|:----------:|:-------------------:|:--------------------:|
+| ID         | INT (AUTO_INCREMENT)| Unique identifier    |
+| Voltage    | FLOAT               | Measured voltage     |
+| Intensity  | FLOAT               | Measured current     |
+| Timestamp  | DATETIME            | Data collection time |
+
+
+### 2. Data Visualisation
+- For real-time visualization and analysis of the collected data, **Grafana** will be used.
+- **Grafana Integration**:
+   - Grafana connects to the MySQL database to query and display the data.
+   - It provides dashboards to visualize power trends over time.
+
+---
 
 ## **Contributors**
 - Thibault Guérinel, Siaka Traoré, Tristan Gallais
