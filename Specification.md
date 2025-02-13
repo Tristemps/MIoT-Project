@@ -53,7 +53,14 @@ This project aims to design an IoT system capable of collecting, transmitting, a
   - Maximum power point tracking (MPPT).
 - **Input**: Voltage from the solar panel.
 - **Output**: Regulated voltage to the **BMS**.
+- **Where we are now**:
+  - Siaka 
 
+Current Path: We have understood that the current path is as follows: Check on KiCad, but in general for the MPPT. The signal goes from the panel to the sensor and the battery also goes to the sensor. Then the information passes to the microprocessor. The microprocessor sends the information to the StepDown, which directs the current from the panel to the battery with the good voltage.
+
+The script "pwmSTM32.c" in the folder "electronique": can later be integrated for the MPPT. The goal of the PWM is to use the high and low pins of our board to create a PWM signal. This PWM signal is used to adapt the voltage provided by the solar panel and transmit it to our battery. The duty cycle represents the duration during which our signal is high compared to the entire period. It is this signal that allows us to adjust the voltage coming from the solar panel.
+
+This script is an example of code extracted from the documentation of the STM32 Discovery board and started to be adapted for our case. We tried to integrate it into the project provided by Guillaume Le Gall (https://gitlab2.istic.univ-rennes1.fr/gulegall/esir-miot-base/-/tree/main?ref_type=heads), but we encountered compilation errors that we didn't have time to fix.
 
 ### **2. BMS Board**
 - **Role**:
@@ -64,6 +71,9 @@ This project aims to design an IoT system capable of collecting, transmitting, a
   - Balances battery cell charge levels.
 - **Input**: Regulated voltage from the MPPT.
 - **Output**: Power for the Zolertia Server.
+- **Where we are now**:
+
+The script "bms.c" in the folder "electronique": We need to try testing it within the project provided by Guillaume Le Gall (https://gitlab2.istic.univ-rennes1.fr/gulegall/esir-miot-base/-/tree/main?ref_type=heads).
 
 
 ### **3. Zolertia Server Board**
