@@ -1,4 +1,4 @@
-@startuml
+startuml
 package "IoT System" {
     [Solar Panel] --> [MPPT/BMS Board] : "Transmitted Power"
     [MPPT/BMS Board] --> [Batterie] : "Energie Storage"
