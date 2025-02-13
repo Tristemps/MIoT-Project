@@ -73,7 +73,7 @@ This script is an example of code extracted from the documentation of the STM32 
 - **Output**: Power for the Zolertia Server.
 - **Where we are now**:
 
-The script "bms.c" in the folder "electronique": We need to try testing it within the project provided by Guillaume Le Gall (https://gitlab2.istic.univ-rennes1.fr/gulegall/esir-miot-base/-/tree/main?ref_type=heads).
+The script "bms.c" in the folder "electronique": We need to try testing it within the project provided by Guillaume Le Gall (https://gitlab2.istic.univ-rennes1.fr/gulegall/esir-miot-base/-/tree/main?ref_type=heads). We have implemented the "Coulomb Counting" method. This method works by measuring the current flowing in and out of the battery to estimate the State of Charge (SOC). By integrating the current over a given period, it is possible to calculate the remaining charge in the battery. This allows for more precise and efficient battery energy management. We can take 4.2 V as the starting point, which corresponds to a 100% state of charge.
 
 
 ### **3. Zolertia Server Board**
