@@ -1,0 +1,16 @@
+startuml
+package "IoT System" {
+    [Solar Panel] --> [MPPT/BMS Board] : "Transmitted Power"
+    [MPPT/BMS Board] --> [Batterie] : "Energie Storage"
+    [MPPT/BMS Board] --> [Zolertia Server] : "Wired Communication (UART)"
+}
+
+    [Zolertia Server] --> [Border router] : "Wireless Communication (CoAP)"
+
+package "PC" {
+    [HTTP Server, CoAP Client] --> [Database] : "Storage"
+    [tunslip6] --> [Border router] : "USB"
+    [Database] --> [User Interface] : "Visualization of data"
+}
+
+@enduml
