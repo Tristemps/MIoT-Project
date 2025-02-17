@@ -53,7 +53,14 @@ This project aims to design an IoT system capable of collecting, transmitting, a
   - Maximum power point tracking (MPPT).
 - **Input**: Voltage from the solar panel.
 - **Output**: Regulated voltage to the **BMS**.
+- **Where we are now**:
+  - Siaka 
 
+Current Path: We have understood that the current path is as follows: Check on KiCad, but in general for the MPPT. The signal goes from the panel to the sensor and the battery also goes to the sensor. Then the information passes to the microprocessor. The microprocessor sends the information to the StepDown, which directs the current from the panel to the battery with the good voltage.
+
+The script "pwmSTM32.c" in the folder "electronique": can later be integrated for the MPPT. The goal of the PWM is to use the high and low pins of our board to create a PWM signal. This PWM signal is used to adapt the voltage provided by the solar panel and transmit it to our battery. The duty cycle represents the duration during which our signal is high compared to the entire period. It is this signal that allows us to adjust the voltage coming from the solar panel.
+
+This script is an example of code extracted from the documentation of the STM32 Discovery board and started to be adapted for our case. We tried to integrate it into the project provided by Guillaume Le Gall (https://gitlab2.istic.univ-rennes1.fr/gulegall/esir-miot-base/-/tree/main?ref_type=heads), but we encountered compilation errors that we didn't have time to fix.
 
 ### **2. BMS Board**
 - **Role**:
@@ -64,9 +71,19 @@ This project aims to design an IoT system capable of collecting, transmitting, a
   - Balances battery cell charge levels.
 - **Input**: Regulated voltage from the MPPT.
 - **Output**: Power for the Zolertia Server.
+- **Where we are now**:
+
+The script "bms.c" in the folder "electronique": We need to try testing it within the project provided by Guillaume Le Gall (https://gitlab2.istic.univ-rennes1.fr/gulegall/esir-miot-base/-/tree/main?ref_type=heads). We have implemented the "Coulomb Counting" method. This method works by measuring the current flowing in and out of the battery to estimate the State of Charge (SOC). By integrating the current over a given period, it is possible to calculate the remaining charge in the battery. This allows for more precise and efficient battery energy management. We can take 4.2 V as the starting point, which corresponds to a 100% state of charge.
+
+### **3. Soldering Issues and Debugging the Board**
+**Debugging the Electronic Board**
+During the soldering phase, we encountered unexpected problems with the electronic board. After soldering all the components (see Figure 2: Soldered Board), we observed a voltage of 5.3 V instead of the expected 12 V. Extensive testing revealed that the resistance of R12 had changed from 0.4 Ohms to 500 Ohms. Despite replacing it, the voltage remained incorrect, and R12 continued to deteriorate, indicating a short circuit in the board. We tested the polarization of capacitors and diodes, as well as the transistors and resistors, but a lack of time prevented us from checking the entire circuit. The next step is to isolate and test the 12-volt circuit to identify and fix the problem.
+
+**First Soldering Not Easy**
+The first attempt at soldering the components was challenging due to our lack of experience. Some connections were unreliable, causing malfunctions and connectivity issues. Additionally, we sometimes left our soldering iron on the components or the board for too long, damaging some of them. We had to redo several solder joints to improve the connections, which extended the development process.
 
 
-### **3. Zolertia Server Board**
+### **4. Zolertia Server Board**
 - **Role**:
   - The Zolertia Server, powered by the battery management system (BMS), is responsible for collecting voltage and current data from the battery. The Zolertia Server communicates the data to the Zolertia Border Router via the **CoAP** protocol over the **6LoWPAN** wireless network.
 - **Main Features**:
@@ -75,7 +92,7 @@ This project aims to design an IoT system capable of collecting, transmitting, a
    - Ensures lightweight and efficient data exchange using the **CoAP** protocol.
 
 
-### **4. Border Router Board**
+### **5. Border Router Board**
 - **Role**:
   - The Border router, powered via USB from a computer, retrieves voltage, current data collected by the Zolertia Server. It communicates with the Zolertia Server using the **CoAP** protocol over the **6LoWPAN** wireless interface to request and gather this information.
 - **Main Features**:
