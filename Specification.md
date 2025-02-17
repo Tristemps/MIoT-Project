@@ -36,7 +36,7 @@ This project aims to design an IoT system capable of collecting, transmitting, a
 - **IPv6**: Provides global connectivity for Zolertia boards.
 
 ### **3. Computer**
-- Receives and stores data sent by Zolertia Border Router.
+- GET and stores data from the Zolertia boards.
 - Provides a user interface to visualize the collected data.
 
 ### **4. Architecture**
@@ -85,7 +85,7 @@ The first attempt at soldering the components was challenging due to our lack of
 
 ### **4. Zolertia Server Board**
 - **Role**:
-  - The Zolertia Server, powered by the battery management system (BMS), is responsible for collecting voltage and current data from the battery. The Zolertia Server communicates the data to the Zolertia Border Router via the **CoAP** protocol over the **6LoWPAN** wireless network.
+  - The Zolertia Server is responsible for collecting voltage and current data from the battery. The Zolertia Server communicates the data to the Zolertia Border Router via the **CoAP** protocol over the **6LoWPAN** wireless network.
 - **Main Features**:
    - Received voltage, current and time data from the battery.
    - Provides a wireless interface for communication, compatible with **6LoWPAN**.
@@ -163,6 +163,48 @@ The PC serves as a central hub for data processing, storage, and visualization. 
 - **Grafana Integration**:
    - Grafana connects to the InfluxDB database to query and display the data.
    - It provides dashboards to visualize power trends over time.
+
+---
+
+# How to Launch
+
+## Install Required Software
+
+1. **Download and Install InfluxDB & Grafana**  
+   - Ensure InfluxDB and Grafana are installed on your system.  
+   - Verify that the servers are running by checking their status.  
+   - Access InfluxDB via [localhost:8086](http://localhost:8086) and Grafana via [localhost:3000](http://localhost:3000).  
+
+2. **Install Contiki-NG**  
+   - Clone the Contiki-NG repository from GitHub:  
+     ```bash
+     git clone https://github.com/contiki-ng/contiki-ng.git
+     cd contiki-ng
+     ```
+   - Launch the Cooja simulator, which is located in `tools/cooja`:  
+     ```bash
+     ./gradlew run
+     ```
+   - The Cooja simulator interface will open, allowing you to import a simulation.  
+   - Our simulation file (`cooja.csc`) can be found in the `transmission_data` directory.  
+
+## Configure the IPv6 Tunnel  
+
+To connect the Zolertia border router to your PC, open a terminal and navigate to the `tools/serial-io` directory, always in contiki-ng:  
+```bash
+cd tools/serial-io
+sudo ./tunslip6 -v2 -t tun0 -a localhost -p 60001 1::a/64
+```
+
+This command will display the IPv6 address of the Zolertia border router.
+
+## Run the Data Transmission Script
+
+Execute the cooja.py script, providing the IPv6 address of the target Zolertia server:
+```python
+exemple : python3 cooja.py 1::202:2:2:2
+```
+This script will retrieve voltage and current values and push them to the InfluxDB database. You can then visualize the data in the dashboarb "power" using Grafana.
 
 ---
 
