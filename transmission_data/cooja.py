@@ -2,13 +2,22 @@ import asyncio
 import re
 import time
 import requests
+import sys
 from aiocoap import Context, Message
 from aiocoap.numbers import Code
+
+# Vérification de la présence de l'argument IPv6
+if len(sys.argv) != 2:
+    print("Usage: python script.py <IPv6_ADDRESS>")
+    sys.exit(1)
+
+ipv6_address = sys.argv[1]
+coap_uri = f"coap://[{ipv6_address}]/test/power"
 
 # Fonction pour récupérer les données via CoAP
 async def get_coap_data():
     protocol = await Context.create_client_context()
-    request = Message(code=Code.GET, uri="coap://[1::202:2:2:2]/test/power")
+    request = Message(code=Code.GET, uri=coap_uri)
 
     try:
         response = await protocol.request(request).response
