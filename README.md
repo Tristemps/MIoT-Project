@@ -53,8 +53,7 @@ This project aims to design an IoT system capable of collecting, transmitting, a
   - Maximum power point tracking (MPPT).
 - **Input**: Voltage from the solar panel.
 - **Output**: Regulated voltage to the **BMS**.
-- **Where we are now**:
-  - Siaka 
+- **Where we are now**: 
 
 Current Path: We have understood that the current path is as follows: Check on KiCad, but in general for the MPPT. The signal goes from the panel to the sensor and the battery also goes to the sensor. Then the information passes to the microprocessor. The microprocessor sends the information to the StepDown, which directs the current from the panel to the battery with the good voltage.
 
